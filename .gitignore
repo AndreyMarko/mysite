@@ -23,9 +23,12 @@ instance/
 *.sqlite3
 
 # Uploaded files
-static/uploads/
-uploads/
-media/
+static/uploads/*
+!static/uploads/.gitkeep
+
+# Migrations
+migrations/versions/
+migrations/__pycache__/
 
 # IDE specific files
 .idea/
@@ -42,10 +45,6 @@ media/
 .env.local
 .env.*.local
 .flaskenv
-
-# Flask migration files
-migrations/versions/__pycache__/
-migrations/__pycache__/
 
 # Log files
 *.log
