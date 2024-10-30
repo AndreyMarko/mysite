@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+    <style>
+        .custom-shadow {
+             /* Увеличенная тень */
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 8px 15px;
+            /* или более сильная тень */
+            /* box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 30px; */
+            /* или очень заметная тень */
+            /* box-shadow: rgba(0, 0, 0, 0.4) 0px 12px 36px; */
+        }
+        
+        /* Эффект при наведении */
+        .custom-shadow:hover {
+             /* Увеличенная тень при наведении */
+            box-shadow: rgba(0, 0, 0, 0.5) 0px 20px 30px;
+            transition: all 0.3s ease;
+        }
+
+        /**/
+        .custom-shadow {
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 8px 15px;
+        }
+        
+        .custom-shadow:hover {
+            box-shadow: rgba(0, 0, 0, 0.5) 0px 20px 30px;
+            transition: all 0.3s ease;
+        }
+
+        /* Стили для плавающей кнопки */
+.floating-button {
+    position: fixed;
+    width: auto;
+    padding: 0 10px 0 0px; /* Уменьшили левый отступ до 5px */
+    height: 50px;
+    border-radius: 600px;
+    background-color: #0d6efd;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    right: 10px;
+    text-decoration: none;
+}
+
+/* Стили для иконок */
+.floating-button i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Убираем line-height, так как используем flex */
+.floating-button i,
+.floating-button span {
+    vertical-align: middle;
+}
+
+.floating-button.ask {
+    bottom: 30px;
+}
+
+.floating-button.call {
+    bottom: 100px;
+    background-color: #198754;
+}
+
+.floating-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+    background-color: #0b5ed7;
+    color: white;
+    text-decoration: none;
+}
+
+.floating-button.call:hover {
+    background-color: #157347;
+}
+    </style>
+
+    <div class="container">  <!-- Используем container для обычной ширины -->
+        <h1 class="mb-4" style="text-align: center;">Добро пожаловать на наш магазин</h1>
+        
+        {% if posts %}
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">  <!-- Указываем колонки -->
+                {% for post in posts %}
+                    <div class="col">  <!-- Используем col для каждой карточки -->
+                        <div class="card custom-shadow">
+                            {% if post.image %}
+                            <a href="{{ url_for('post', post_id=post.id) }}">
+                                <img src="{{ url_for('static', filename=post.image) }}" 
+                                     class="card-img-top" 
+                                     alt="{{ post.title }}"
+                                     style="height: 225px; object-fit: cover;">
+                            {% else %}
+                                <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">
+                                    <rect width="100%" height="100%" fill="#55595c"></rect>
+                                    <text x="50%" y="50%" fill="#eceeef" dy=".3em">Изображение отсутствует</text>
+                                </svg>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ post.title }}</h5>
+                                <!-- Оборачиваем текст в ссылку -->
+                                <a href="{{ url_for('post', post_id=post.id) }}" class="text-decoration-none text-dark">
+                                    <p class="card-text">{{ post.content[:150] }}...</p>
+                                </a>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a href="{{ url_for('post', post_id=post.id) }}" class="link-primary">Подробнее...</a>
+                                        {% if session.get('is_admin') %}
+                                            <a href="{{ url_for('delete', post_id=post.id) }}" class="btn btn-info" onclick="return confirm('Удалить : {{post.title}}?')">Удалить</a>
+                                        {% endif %}
+                                    </div>
+                                    <h5 class="card-title">{{ post.price }}</h5>
+                                    {% if not session.get('is_admin') %}
+                                        <a href="#" class="btn btn-primary">Купить</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-muted">Пока нет постов. Нажмите добавть пост!</p>
+        {% endif %}
+    </div>
+
+    <a href="#" class="floating-button ask">
+        <i class="fas fa-question-circle"></i>
+        <span>ChatGPT</span>
+    </a>
+
+    <a href="{{ url_for('add_client') }}" class="floating-button call">
+        <i class="fas fa-phone"></i>
+        <span>Звонок</span>
+    </a>
+{% endblock %}
