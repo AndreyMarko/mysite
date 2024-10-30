@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, jsonify, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from datetime import datetime
@@ -7,7 +7,7 @@ import socket
 import os
 from werkzeug.utils import secure_filename
 from PIL import Image 
-
+from groq import Groq
 # Инициализация приложения
 # Initialize application
 app = Flask(__name__)
@@ -20,6 +20,39 @@ app.secret_key = 'secret_key'
 # Admin credentials (store in a secure place, like environment variables)
 ADMIN_USERNAME = 'admin'
 ADMIN_PASSWORD = 'admin'
+
+# API ключ непосредственно в коде
+client = Groq(api_key="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")
+
+
+@app.route('/botai')
+def botai():
+    return render_template('botai.html')
+
+
+@app.route('/process_audio', methods=['POST'])
+def process_audio():
+    data = request.json
+    user_text = data.get('text', '')
+    print(f"Received text: {user_text}")  # Отладочный вывод
+    
+    try:
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {"role": "system", "content": "Ты - русскоязычный ассистент. Всегда отвечай на русском языке."},
+                {"role": "user", "content": user_text}
+            ],
+            model="llama3-8b-8192",
+        )
+        
+        response = chat_completion.choices[0].message.content
+        print(f"Groq response: {response}")  # Отладочный вывод
+        return jsonify({"response": response})
+    except Exception as e:
+        print(f"Error in process_audio: {str(e)}")  # Отладочный вывод
+        return jsonify({"response": f"Произошла ошибка: {str(e)}"}), 500
+
+
 
 # Функция-декоратор для проверки авторизации
 # Decorator function to check authorization
