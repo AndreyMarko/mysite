@@ -121,7 +121,7 @@
                                     </div>
                                     <h5 class="card-title">{{ post.price }}</h5>
                                     {% if not session.get('is_admin') %}
-                                        <a href="#" class="btn btn-primary">Купить</a>
+                                        <a href="/pokupka" class="btn btn-primary">Купить</a>
                                     {% endif %}
                                 </div>
                             </div>
@@ -134,7 +134,7 @@
         {% endif %}
     </div>
 
-    <a href="#" class="floating-button ask">
+    <a href="{{url_for('botai')}}" class="floating-button ask">
         <i class="fas fa-question-circle"></i>
         <span>ChatGPT</span>
     </a>

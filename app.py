@@ -30,6 +30,10 @@ def botai():
     return render_template('botai.html')
 
 
+@app.route('/pokupka')
+def pokupka():
+    return render_template('pokupka.html')
+
 @app.route('/process_audio', methods=['POST'])
 def process_audio():
     data = request.json
