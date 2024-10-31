@@ -121,7 +121,7 @@
                                     </div>
                                     <h5 class="card-title">{{ post.price }}</h5>
                                     {% if not session.get('is_admin') %}
-                                        <a href="/pokupka" class="btn btn-primary">Купить</a>
+                                        <a href="{{url_for('pocupka')}}" class="btn btn-primary">Купить</a>
                                     {% endif %}
                                 </div>
                             </div>
