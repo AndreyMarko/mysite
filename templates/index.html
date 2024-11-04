@@ -114,14 +114,14 @@
                                 </a>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
-                                        <a href="{{ url_for('post', post_id=post.id) }}" class="link-primary">Подробнее...</a>
+                                        <a href="{{ url_for('post', post_id=post.id) }}" class="link-primary me-4">Подробнее...</a><br>
                                         {% if session.get('is_admin') %}
                                             <a href="{{ url_for('delete', post_id=post.id) }}" class="btn btn-info" onclick="return confirm('Удалить : {{post.title}}?')">Удалить</a>
                                         {% endif %}
                                     </div>
                                     <h5 class="card-title">{{ post.price }}</h5>
                                     {% if not session.get('is_admin') %}
-                                        <a href="{{url_for('pocupka')}}" class="btn btn-primary">Купить</a>
+                                        <a href="{{url_for('pokupka')}}" class="btn btn-primary">Купить</a>
                                     {% endif %}
                                 </div>
                             </div>

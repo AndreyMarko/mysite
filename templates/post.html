@@ -18,7 +18,7 @@
             <p class="card-text">{{ post.content }}</p>
             <p class="text-muted">{{ post.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
             <div class="d-flex justify-content-center gap-2">
-                <a href="#" class="btn btn-primary">Оформить заказ</a>
+                <a href="{{url_for('add_client')}}" class="btn btn-primary">Оформить заказ</a>
                 {% if session.get('is_admin') %}
                     <a href="{{ url_for('delete', post_id=post.id) }}" 
                        class="btn btn-danger"

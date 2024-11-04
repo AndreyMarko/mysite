@@ -86,7 +86,7 @@ migrate = Migrate(app, db)  # Добавляем миграции
 
 # Конфигурация для загрузки файлов
 UPLOAD_FOLDER = 'static/uploads'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -140,8 +140,9 @@ class Clients(db.Model):
         return f'<Client {self.name}>'
 
 
-    def __repr__(self):
-        return f'<Client {self.name}>'
+    # Создание таблиц
+with app.app_context():
+    db.create_all()
 
 # Маршруты / Routes
 # Route for the home page
@@ -218,33 +219,54 @@ def resize_image(image_path):
 
 # Маршрут для создания нового поста
 # Route for creating a new post
+# Определяем маршрут '/create' для обработки GET и POST запросов
 @app.route('/create', methods=['GET', 'POST'])
+# Декоратор для проверки прав администратора
 @admin_required
 def create():
+    # Проверяем, является ли запрос методом POST (отправка формы)
     if request.method == 'POST':
+        # Получаем значение поля 'title' из формы
         title = request.form['title']
+        # Получаем значение поля 'content' из формы
         content = request.form['content']
+        # Получаем значение поля 'price' из формы как строку
         price = request.form.get('price', type=str)  # type=int автоматически преобразует строку в число
         
+        # Инициализируем переменную для пути к изображению
         image_path = None
+        # Проверяем, было ли загружено изображение
         if 'image' in request.files:
+            # Получаем объект файла из запроса
             file = request.files['image']
+            # Проверяем, существует ли файл и допустимо ли его расширение
             if file and allowed_file(file.filename):
+                # Получаем безопасное имя файла
                 filename = secure_filename(file.filename)
+                # Создаем уникальное имя файла с временной меткой
                 unique_filename = f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{filename}"
+                # Формируем полный путь для сохранения файла
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
                 
+                # Сохраняем файл
                 file.save(file_path)
+                # Изменяем размер изображения
                 resize_image(file_path)
                 
+                # Сохраняем путь к изображению для базы данных
                 image_path = f"uploads/{unique_filename}"
         
+        # Создаем новый объект поста с полученными данными
         post = Post(title=title, content=content, image=image_path, price=price)
+        # Добавляем пост в сессию базы данных
         db.session.add(post)
+        # Сохраняем изменения в базе данных
         db.session.commit()
         
+        # Перенаправляем пользователя на главную страницу
         return redirect(url_for('home'))
     
+    # Если запрос GET, отображаем шаблон страницы создания поста
     return render_template('create.html')
 
 
