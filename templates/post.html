@@ -4,13 +4,12 @@
 
 {% block content %}
 <div class="d-flex justify-content-center">
-    <div class="card col-md-8" style="background-color: rgb(200, 200, 201);">
+    <div class="card col-12 col-md-8" style="background-color: rgb(200, 200, 201);">
         {% if post.image %}
             <div class="text-center">
                 <img src="{{ url_for('static', filename=post.image) }}" 
-                     class="card-img-top" 
-                     alt="{{ post.title }}"
-                     style="max-width: 60%; height: auto;">
+                     class="card-img-top img-fluid" 
+                     alt="{{ post.title }}">
             </div>
         {% endif %}
         <div class="card-body text-center">
