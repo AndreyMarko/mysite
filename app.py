@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request, redirect, url_for, session, flash
+from flask import Flask, Response, jsonify, render_template, request, redirect, send_from_directory, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from datetime import datetime
@@ -159,6 +159,11 @@ def home():
 def post(post_id):
     post = Post.query.get_or_404(post_id)
     return render_template('post.html', post=post)
+
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'sitemap.xml')
 
 # Маршрут для удаления поста
 # Route for deleting a post

@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 
 {% block title %}{{ post.title }}{% endblock %}
+<!-- SEO Метатеги -->
+<meta name="description" content="Лучший магазин строительных материалов: доступные цены, высокое качество и быстрая доставка. Заказывайте материалы прямо сейчас!">
+<meta name="keywords" content="строительные материалы, купить стройматериалы, доставка стройматериалов, магазин стройматериалов">
+<meta name="robots" content="post, follow">
 
 {% block content %}
 <div class="d-flex justify-content-center">
@@ -9,7 +13,8 @@
             <div class="text-center">
                 <img src="{{ url_for('static', filename=post.image) }}" 
                      class="card-img-top img-fluid" 
-                     alt="{{ post.title }}">
+                     alt="{{ post.title }}"
+                     style="width: 60%;">
             </div>
         {% endif %}
         <div class="card-body text-center">
